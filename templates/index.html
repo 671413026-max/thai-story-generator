@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ดินแดนนิทานหรรษา ✨ แต่งนิทานกับปทุมมา AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600;700&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="background-decorations">
+    <div class="floating-shape shape-1">🌟</div>
+    <div class="floating-shape shape-2">🎈</div>
+    <div class="floating-shape shape-3">🌈</div>
+    <div class="floating-shape shape-4">🍄</div>
+    <div class="floating-shape shape-5">🦋</div>
+    <div class="floating-shape shape-6">✨</div>
+  </div>
+
+  <main class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-badge">
+        <span class="emoji-bounce">📖</span>
+      </div>
+      <h1 class="title">ดินแดนนิทานหรรษา</h1>
+      <p class="subtitle">พิมพ์คำที่คุณชื่นชอบ แล้วให้พี่ปทุมมา AI แต่งนิทานแสนสนุกให้ฟัง!</p>
+    </header>
+
+    <!-- Chat & Story Display Area -->
+    <section class="story-board-wrapper">
+      <div class="board-header">
+        <div class="board-indicator">
+          <span class="dot red"></span>
+          <span class="dot yellow"></span>
+          <span class="dot green"></span>
+        </div>
+        <span class="board-title">กล่องเล่านิทาน ✨</span>
+      </div>
+
+      <div id="chatBox" class="chat-box">
+        <!-- Welcome Message -->
+        <div class="chat-message bot welcome-bubble">
+          <div class="avatar">🦉</div>
+          <div class="bubble-content">
+            <p><strong>สวัสดีจ้าเพื่อนๆ ทุกคน!</strong> 👋</p>
+            <p>วันนี้อยากฟังนิทานเรื่องอะไรดีนะ? ลองพิมพ์คำใบ้มาเลย เช่น <span class="tag-sample" onclick="setKeywords('ลุงชัย น้ำตก หมูป่า')">ลุงชัย น้ำตก หมูป่า</span> หรือ <span class="tag-sample" onclick="setKeywords('เจ้ากระต่าย จานบิน ดวงจันทร์')">เจ้ากระต่าย จานบิน ดวงจันทร์</span> แล้วกด <strong>"แต่งนิทาน"</strong> ได้เลยนะ!</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading Indicator -->
+      <div id="loadingStatus" class="loading-bar hidden">
+        <div class="loading-magic">
+          <span class="wand-icon">🪄</span>
+          <span class="loading-text">พี่ปทุมมา AI กำลังแต่งนิทานแสนสนุกให้อยู่จ้า...</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill"></div>
+        </div>
+      </div>
+
+      <!-- Error Banner -->
+      <div id="errorBanner" class="alert-box error hidden">
+        <span class="alert-icon">⚠️</span>
+        <div class="alert-text">
+          <strong id="errorTitle">เกิดข้อผิดพลาด</strong>
+          <p id="errorMessage">ขออภัยด้วยจ้า ระบบไม่สามารถแต่งนิทานได้ในขณะนี้</p>
+        </div>
+        <button class="close-btn" onclick="dismissError()">✕</button>
+      </div>
+    </section>
+
+    <!-- Prompt Input Form -->
+    <section class="prompt-section">
+      <form id="storyForm" class="story-form" onsubmit="handleFormSubmit(event)">
+        <div class="input-card">
+          <label for="promptInput" class="input-label">
+            <span>✨ คำหรือประโยคสำหรับแต่งนิทาน:</span>
+            <span class="badge-hint">คิดคำศัพท์สนุกๆ ได้ตามใจชอบ!</span>
+          </label>
+          <div class="input-group">
+            <input 
+              type="text" 
+              id="promptInput" 
+              name="prompt" 
+              placeholder="เช่น ลุงชัย น้ำตก หมูป่า หรือ มังกรใจดี ไอศกรีม..." 
+              autocomplete="off" 
+              maxlength="200" 
+              required
+            >
+            <button type="submit" id="generateBtn" class="magic-btn">
+              <span class="btn-icon">🎨</span>
+              <span class="btn-label">แต่งนิทาน</span>
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <!-- Quick Word Suggestions -->
+      <div class="quick-keywords">
+        <span class="quick-title">💡 ลองกดเลือกคำสนุกๆ:</span>
+        <button type="button" class="chip-btn" onclick="setKeywords('ลุงชัย น้ำตก หมูป่า')">🐗 ลุงชัย น้ำตก หมูป่า</button>
+        <button type="button" class="chip-btn" onclick="setKeywords('ลูกหมาซน ลูกโป่ง เมืองเวทมนตร์')">🎈 ลูกหมาซน ลูกโป่ง เมืองเวทมนตร์</button>
+        <button type="button" class="chip-btn" onclick="setKeywords('แมวส้ม ยานอวกาศ ดาวปลาทู')">🚀 แมวส้ม ยานอวกาศ ดาวปลาทู</button>
+        <button type="button" class="chip-btn" onclick="setKeywords('คุณเต่า รองเท้าสเก็ต สายรุ้ง')">🐢 คุณเต่า รองเท้าสเก็ต สายรุ้ง</button>
+      </div>
+    </section>
+
+    <!-- Footer Note -->
+    <footer class="app-footer">
+      <p>ขับเคลื่อนด้วย 🌸 <strong>Pathumma LLM</strong> จาก <strong>AI for Thai</strong> (NECTEC)</p>
+      <p class="privacy-note">🔒 กุญแจ API ถูกเก็บรักษาอย่างปลอดภัยที่ฝั่ง Backend</p>
+    </footer>
+  </main>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
